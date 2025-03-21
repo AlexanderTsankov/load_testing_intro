@@ -1,23 +1,18 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-const URL = 'https://http://localhost:8080/';
-
-function validateResponse(res) {
-  check(res, { 'status is 200': (r) => r.status === 200 });
-  sleep(Math.random() * 2);
-}
-
-// Soak Test
-export const soakTest = {
+export let options = {
   stages: [
-    { duration: '2h', target: 50 },
-    { duration: '4h', target: 50 },
-    { duration: '1h', target: 0 },
+    { duration: '1h', target: 100 },
+    { duration: '2h', target: 100 },
+    { duration: '5m', target: 0 },
   ],
 };
 
-export function soak() {
-  const res = http.get(URL);
-  validateResponse(res);
+export default function () {
+  let res = http.get('https://localhost:8080/');
+  check(res, {
+    'status is 200': (r) => r.status === 200,
+  });
+  sleep(1);
 }

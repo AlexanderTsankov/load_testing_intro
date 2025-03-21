@@ -1,23 +1,18 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-const URL = 'https://http://localhost:8080/';
-
-function validateResponse(res) {
-  check(res, { 'status is 200': (r) => r.status === 200 });
-  sleep(Math.random() * 2);
-}
-
-// Spike Test
-export const spikeTest = {
+export let options = {
   stages: [
-    { duration: '1m', target: 0 },
-    { duration: '30s', target: 500 },
-    { duration: '30s', target: 0 },
+    { duration: '30s', target: 10 },
+    { duration: '10s', target: 1000 },
+    { duration: '1m', target: 10 },
   ],
 };
 
-export function spike() {
-  const res = http.get(URL);
-  validateResponse(res);
+export default function () {
+  let res = http.get('https://localhost:8080/');
+  check(res, {
+    'status is 200': (r) => r.status === 200,
+  });
+  sleep(1);
 }

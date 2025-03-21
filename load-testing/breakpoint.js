@@ -1,23 +1,19 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-const URL = 'https://http://localhost:8080/';
-
-function validateResponse(res) {
-  check(res, { 'status is 200': (r) => r.status === 200 });
-  sleep(Math.random() * 2);
-}
-
-// Breakpoint Test
-export const breakpointTest = {
+export let options = {
   stages: [
-    { duration: '10m', target: 100 },
-    { duration: '5m', target: 300 },
-    { duration: '5m', target: 500 },
+    { duration: '1m', target: 100 },
+    { duration: '1m', target: 200 },
+    { duration: '1m', target: 300 },
+    { duration: '1m', target: 0 },
   ],
 };
 
-export function breakpoint() {
-  const res = http.get(URL);
-  validateResponse(res);
+export default function () {
+  let res = http.get('https://localhost:8080/');
+  check(res, {
+    'status is 200': (r) => r.status === 200,
+  });
+  sleep(1);
 }
