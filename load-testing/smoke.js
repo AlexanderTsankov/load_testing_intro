@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-const URL = 'https://http://localhost:8080/';
+const URL = 'https://http://localhost:8080/index.html';
 
 function validateResponse(res) {
   check(res, { 'status is 200': (r) => r.status === 200 });
